@@ -1,19 +1,27 @@
 package com.santidev.pruebatesting.funciones
 
 class ListasCarrito {
+  private val productos = mutableListOf<String>()
+  
   fun agregarProducto(producto: String): List<String> {
-    return listOf(producto)
+    productos.add(producto)
+    return productos.toList()
   }
+  
   fun eliminarProducto(producto: String): List<String> {
-    return emptyList()
+    productos.remove(producto)
+    return productos.toList()
   }
+  
   fun calcularTotal(precios: List<Double>): Double {
     return precios.sum()
   }
+  
   fun estaVacio(): Boolean {
-    return true
+    return productos.isEmpty()
   }
+  
   fun cantidadDeProductos(): Int {
-    return 0
+    return productos.size
   }
 }
