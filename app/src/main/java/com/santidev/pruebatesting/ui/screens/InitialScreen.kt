@@ -11,9 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.santidev.pruebatesting.funciones.Calculadora
-import com.santidev.pruebatesting.funciones.ListasCarrito
-import com.santidev.pruebatesting.funciones.ValidarTexto
+import com.santidev.pruebatesting.funciones.versionesDeTestingListaCarrito.ListasCarritoBase
 
 @Composable
 fun InitialScreen() {
@@ -56,7 +54,7 @@ fun InitialScreen() {
 //    Spacer(modifier = Modifier.height(6.dp))
 //    Text(text = "Edad negativa: ${validador.validarEdad(edad = -1)}")
     
-    val lista = ListasCarrito()
+    val lista = ListasCarritoBase()
     
     Text(text = "Nombre producto: ${lista.agregarProducto(producto = "Mesa")}")
     Spacer(modifier = Modifier.height(6.dp))

@@ -1,6 +1,6 @@
-package com.santidev.pruebatesting.funciones
+package com.santidev.pruebatesting.funciones.versionesDeTestingListaCarrito
 
-class ListasCarrito {
+class ListasCarritoBase {
   private val productos = mutableListOf<String>()
   
   fun agregarProducto(producto: String): List<String> {

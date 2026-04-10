@@ -1,14 +1,14 @@
-package com.santidev.pruebatesting.funciones
+package com.santidev.pruebatesting.funciones.versionesDeTestingListaCarrito
 
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class ListasCarritoTest {
+class ListasCarritoTestBase {
   
   @Test
   fun `validar que se agrega un producto a la lista`() {
-    val lista = ListasCarrito()
+    val lista = ListasCarritoBase()
     val resultado = lista.agregarProducto("Mesa")
     /*assertEquals(resultado.contains("Mesa"), true)*/
     /*assertTrue(resultado.contains("Mesa"))*/
@@ -24,7 +24,7 @@ class ListasCarritoTest {
   fun `validamos que se agreguen 2 productos al carrito y si los hay que los muestre`() {
     //Para entender esto con el patron AAA es mas facil
     // Arrange <- primera A
-    val lista = ListasCarrito()
+    val lista = ListasCarritoBase()
     
     // Act <- segunda A
     lista.agregarProducto("Mesa") // <-primer producto
@@ -42,7 +42,7 @@ class ListasCarritoTest {
   
   @Test
   fun `verificamos si al eliminar un producto devuelve la cantidad adecuada que es 1`() {
-    val lista = ListasCarrito()
+    val lista = ListasCarritoBase()
     
     lista.agregarProducto("Mesa")
     lista.agregarProducto("Silla")
@@ -56,7 +56,7 @@ class ListasCarritoTest {
   
   @Test
   fun `calculamos el precio de los productos que hay en la lista`() {
-    val lista = ListasCarrito()
+    val lista = ListasCarritoBase()
     
     val precios = listOf(10.0, 20.0, 30.0)
     //como no tengo una funcion que toma el valor de los productos. Puedo crear una lista imaginaria de precios
@@ -75,7 +75,7 @@ class ListasCarritoTest {
   
   @Test
   fun `verificamos si el carrito esta vacio, si lo esta devuelve true`() {
-    val lista = ListasCarrito()
+    val lista = ListasCarritoBase()
     
     //como solo quiero verificar si la lista esta vacia, entonces no agrego ningun producto
     
@@ -84,7 +84,7 @@ class ListasCarritoTest {
   
   @Test
   fun `verificamos que hayan un total 2 productos en la lista, si los hay confirmamos con un true`() {
-    val lista = ListasCarrito()
+    val lista = ListasCarritoBase()
     
     lista.agregarProducto("Mesa")
     lista.agregarProducto("Silla")
