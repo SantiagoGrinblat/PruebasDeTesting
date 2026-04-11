@@ -1,19 +1,29 @@
 package com.santidev.pruebatesting.funciones.versionesDeTestingListaCarrito
 
+
 class ListaCarritoMejorada {
   
   private val productos = mutableListOf<ProductoVersionMejorada>()
   // se utiliza para crear colecciones ordenadas y redimensionables que permiten agregar, eliminar y actualizar elementos dinamicamente despues de su inicializacion
   
   fun agregarProducto(nombre: String, precio: Double): List<ProductoVersionMejorada> {
-    productos.add(ProductoVersionMejorada(nombre, precio))
-    return productos.toList()
+    if (nombre.isBlank() || precio <= 0) {
+      throw IllegalArgumentException("Mensaje de error: El nombre O el precio son incorrectos")
+    }
+      productos.add(ProductoVersionMejorada(nombre, precio))
+      return productos.toList()
   }
   //se crea un objeto ProductoVersionMejorada con el nombre y precio recibidos
   //y lo agregamos a la lista interna de productos
   //y hacemos que nos retorne la lista de productos. con los elementos ya agregados
   
   fun eliminarProducto(nombre: String): List<ProductoVersionMejorada> {
+    if (nombre.isBlank()) {
+      throw IllegalArgumentException("El nombre del producto esta vacio")
+    }
+    if (productos.none {it.nombre == nombre}) {
+      throw IllegalArgumentException("No hay un producto con ese nombre")
+    }
     productos.removeIf { it.nombre == nombre }
     return productos.toList()
   }
