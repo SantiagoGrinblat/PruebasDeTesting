@@ -22,7 +22,7 @@ class ListaCarritoMejoradaTest {
   //Before: para ahorrar llamados de funcion base
   //lateinit var: para inicializar la variable mas tarden
   
-  lateinit var listaCarritoMejorada: ListaCarritoMejorada
+  private lateinit var listaCarritoMejorada: ListaCarritoMejorada
   
   @Before
   fun funcionPrevia() {
@@ -182,7 +182,13 @@ class ListaCarritoMejoradaTest {
   }
   //esperas que funcione -> assertEquals, assertTrue, assertFalse
   //esperas que explote correctamente -> assertThrows
-  //assertThrows hace que el test SÍ pase cuando explota. El test pasa porque explotó de la forma correcta.
-  //`[acción] con [dato inválido] lanza excepcion`
+  //assertThrows hace que el test SI pase cuando explota.
+  //el test pasa porque exploto de la forma correcta, no porque algo funciono bien.
+  
+  //Formula para nombrar tests negativos:
+  //`[accion] | con [dato invalido] | lanza excepcion`
+  //Ejemplos:
+  //`si se agrega un producto | con precio negativo | , lanza excepcion`
+  //`si se elimina un producto | con nombre vacio |, lanza excepcion`
   
 }
