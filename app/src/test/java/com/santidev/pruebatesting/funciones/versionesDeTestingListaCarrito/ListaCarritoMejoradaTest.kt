@@ -62,15 +62,15 @@ class ListaCarritoMejoradaTest {
   
   @Test
   fun `agregamos un producto con su nombre y precio`() {
-    // Sin @Before = AAA explicito, el Arrange esta adentro del test
-    // Con @Before = AAA implicito, el Arrange esta afuera del test
-    // El patron no desaparece, solo el Arrange se mueve al @Before
+    //sin @Before = AAA explicito, el Arrange esta adentro del test
+    //con @Before = AAA implicito, el Arrange esta afuera del test
+    //el patron no desaparece, solo el Arrange se mueve al @Before
     
     // Arrange implícito = @Before ya inicializo listaCarritoMejorada
     
     // Act - lo que ejecuto
-//    listaCarritoMejorada.agregarProducto("Mesa", 50.0)
-//    listaCarritoMejorada.agregarProducto("Silla", 20.0)
+    //listaCarritoMejorada.agregarProducto("Mesa", 50.0)
+    //listaCarritoMejorada.agregarProducto("Silla", 20.0)
     productosCocina()
     
     // Assert - lo que verifico
