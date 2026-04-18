@@ -26,8 +26,7 @@ class MiClaseTest {
     //no es necesario ponerlo, pero pueder ser mas didactico que este en pantalla aunque no haga nada
     //cuando es buena idea ponerlo en el Arrange?
     //solo es necesario (y recomendado) ponerlo en el Arrange si vas a especificar un comportamiento distinto al que definiste por defecto en el before.
-    
-    
+    //servicioMock = mockk<Servicio>
     //MockK en si es una libreria que crea un objeto falso de la clase que le indicas
     //mockk = es una funcion, entre los ( <> ) les decis que CLASE queres simular y se ejecuta como una funcion
     
@@ -71,7 +70,6 @@ class MiClaseTest {
     assertThrows<Exception> {
       miClase.procesarSaludo()
     }
-    
   }
   
   //tambien podemos usar verify para generar varias llamadas.
@@ -98,8 +96,8 @@ class MiClaseTest {
     //ejemplo: un pago no puede procesarse dos veces
   }
   
-  //Ahora vamos a probar atLeast y atMost.
-  //Ambas son variantes de verify para cuando no se necesita una cantidad exacta sino un rango
+  //ahora vamos a probar atLeast y atMost.
+  //ambas son variantes de verify para cuando no se necesita una cantidad exacta sino un rango
   
   //atLeast -> mínimo de veces:
   @Test
@@ -140,11 +138,12 @@ class MiClaseTest {
     miClase.procesarSaludo()
     miClase.procesarSaludo()
     
-    verify(atLeast = 1, atMost = 3) { servicioMock.obtenerMensaje() }
+    verify(atLeast = 0, atMost = 3) { servicioMock.obtenerMensaje() }
     //quiero que se ejecute un minimo de 1 vez y que sea un maximo de 3 veces
     //se llamo entre 1 y 3 veces -> pasa
     //se llamo 0 o 4 veces -> falla
     //dato extra: si intentas 0 veces, atMost = 3 tambien pasa (porque cero es menor que tres).
+    //por eso para que el test falle necesitas un numero que sea menor que 0 y esos son lo numeros negativos
     //si queres que se llame al menos una vez pero maximo tres, usas la combinacion de atLeast y atMost.
   }
   
@@ -173,9 +172,64 @@ class MiClaseTest {
     verify(exactly = 1) { servicioMock.obtenerMensaje() }
     
     //relaxed NO reemplaza a every.
-    //usar relaxed cuando:
-    //no te importa el valor de retorno, solo queres verificar llamadas (verify)
-    //usae every cuando:
-    //necesitas controlar el resultado, el valor afecta la logica
+    //cuando usar relaxed?:
+    //cuando no te importa el valor de retorno, solo queres verificar llamadas (verify)
+    //cuando usar every:
+    //cuando necesitas controlar el resultado, porque el valor afecta la logica
   }
+  
+  @Test
+  fun `verificamos que se llama al metodo sin usar every`() {
+    servicioMock = mockk<Servicio>(relaxed = true)
+    miClase = MiClase(servicioMock)
+    
+    // Act, se llama al metodo
+    miClase.procesarSaludo()
+    
+    // Assert
+    verify(exactly = 1) { servicioMock.obtenerMensaje() }
+  }
+  //relaxed = true hace que el mock sea permisivo:
+  //no necesitas declarar every para cada metodo, si no declaras every, devuelve valores por defecto ("", 0, false)
+  //muy util cuando solo queres verificar que se llamo, no que devuelve
+  //IMPORTANTE: relaxed solo aplica al mock, no a las clases reales
+  //val servicioMock = mockk<Servicio>(relaxed = true) // permisivo
+  //val miClase = MiClase(servicioMock) // clase real, no tiene relaxed
+  
+  //obtener id especifico de un usuario
+  @Test
+  fun `recuperamos un usuario con el id asignado`() {
+    every { servicioMock.buscarUsuario(23) } returns "Usuario real"
+    //con el every simulamos un usario con el id 23
+
+    val resultado = miClase.obtenerUsuario(23)
+    //con el resultado, almacenamos el usuario con el id 23
+    //si no tuvieramos este almacenamiento y lo llamaramos directamente desde el assertEquals aun asi funcionaria.
+    //no importa si el resultado esta en una variable o no
+    
+    verify(exactly = 1) { servicioMock.buscarUsuario(23) }
+    //en caso de no tener almacenado el usuario, el test falla. = (val resultado = miClase.obtenerUsuario(23))
+    //porque verify no puede verificar que el metodo fue llamado, si este no existe
+    
+    assertEquals("Usuario real", resultado) // resultado / servicioMock.buscarUsuario(23)
+    //de ambas formas funciona
+    
+    //verify(exactly = 1) { servicioMock.buscarUsuario(23) }
+    //en cambio si lo ponemos aca, si el test pasa, porque primero obtiene el dato y despues verifica si el meotodo fue llamado correctamente
+    //verify debe ir DESPUES de llamar al metodo.
+    //si va antes, falla porque el metodo todavia no fue llamado
+  }
+  
+  // any = para devolver cualquier id de usuario
+  @Test
+  fun `recuperamos un usuario con cualquier id`() {
+    every { servicioMock.buscarUsuario(any()) } returns "Otro usuario real"
+    
+    val resultado = miClase.obtenerUsuario(2)
+    
+    assertEquals("Otro usuario real", resultado)
+    verify(exactly = 1) { servicioMock.buscarUsuario(2) }
+  }
+  
+  
 }
