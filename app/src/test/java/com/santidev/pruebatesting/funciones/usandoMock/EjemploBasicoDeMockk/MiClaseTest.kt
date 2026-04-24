@@ -196,10 +196,10 @@ class MiClaseTest {
   //val servicioMock = mockk<Servicio>(relaxed = true) // permisivo
   //val miClase = MiClase(servicioMock) // clase real, no tiene relaxed
   
-  //obtener id especifico de un usuario
+  //obtener id especifico de un usuario0
   @Test
   fun `recuperamos un usuario con el id asignado`() {
-    every { servicioMock.buscarUsuario(23) } returns "Usuario real"
+    every { servicioMock.buscarUsuario(23) } returns "Usuario simulado"
     //con el every simulamos un usario con el id 23
 
     val resultado = miClase.obtenerUsuario(23)
@@ -211,7 +211,7 @@ class MiClaseTest {
     //en caso de no tener almacenado el usuario, el test falla. = (val resultado = miClase.obtenerUsuario(23))
     //porque verify no puede verificar que el metodo fue llamado, si este no existe
     
-    assertEquals("Usuario real", resultado) // resultado / servicioMock.buscarUsuario(23)
+    assertEquals("Usuario simulado", resultado) // resultado / servicioMock.buscarUsuario(23)
     //de ambas formas funciona
     
     //verify(exactly = 1) { servicioMock.buscarUsuario(23) }
@@ -220,16 +220,55 @@ class MiClaseTest {
     //si va antes, falla porque el metodo todavia no fue llamado
   }
   
-  // any = para devolver cualquier id de usuario
   @Test
-  fun `recuperamos un usuario con cualquier id`() {
-    every { servicioMock.buscarUsuario(any()) } returns "Otro usuario real"
+  fun `recuperamos un usuario con el id usando answers`() {
+    //answers es una alternativa mas flexible que returns.
+    //en vez de devolver siempre un valor fijo (como hace returns), ejecuta un bloque de codigo.
+    //dentro del bloque se puede acceder a los argumentos que se pasaron al metodo.
+    //que argumento se pasa al metodo? buscarUsuario(5) <- el 5 es el argumento que se le pasa al metodo.
+    //y para acceder a ese valor, se usa firstArg (que dice accedo al primer argumento) con un tipo entero (5)
+    val id = 3456
+    every { servicioMock.buscarUsuario(id) } answers {
+      val idArg: Int = firstArg<Int>()
+      "Otro Usuario simulado = $idArg"
+      //firstArg<Int>() = Es una funcion de MockK
+      //<Int> le decís de que tipo es ese argumento (en una lista de usuarios no tendremos id = 30.5, asi que queda por defecto)
+    }
+    //en caso que la funcion recibiera dos parametros, existe secondArg<String>() para el segundo
+    //<String>, en caso que el usuario sea (id = 3445214, nombre = "Santiago")
     
-    val resultado = miClase.obtenerUsuario(2)
+    val resultado = miClase.obtenerUsuario(id)
     
-    assertEquals("Otro usuario real", resultado)
-    verify(exactly = 1) { servicioMock.buscarUsuario(2) }
+    assertEquals("Otro Usuario simulado = $id", resultado)
+    verify(exactly = 1) { servicioMock.buscarUsuario(id) }
   }
   
+  // any = para devolver cualquier id de usuario usando answer
+  @Test
+  fun `recuperamos un usuario con el id random`() {
+    every { servicioMock.buscarUsuario(any()) } answers {
+      val idArg: Int = firstArg<Int>()
+      "Usuario simulado $idArg"
+    }
+    
+    val resultado = miClase.obtenerUsuario(556345999)
+    //hasta un maximo de 9 digitos.
+    //si pongo 1 digito mas tendria que cambiar el tipo en la funcion buscarUsuario y obtenerUsuario de Servicio.
+    //pasar de Int a Long y lo mismo con el valor esperado del idArg y firstArg
+    
+    assertEquals("Usuario simulado 556345999", resultado)
+    verify(exactly = 1) { servicioMock.buscarUsuario(556345999) }
+  }
+  
+  // any = para devolver cualquier id de usuario SIN USAR answer
+  @Test
+  fun `otro ejemplo de any sin answer`() {
+    every { servicioMock.buscarUsuario(any()) } returns "Usuario simulado"
+    
+    val resultado = miClase.obtenerUsuario(465278359)
+    
+    assertEquals("Usuario simulado", resultado)
+    verify(exactly = 1) { servicioMock.buscarUsuario(465278359) }
+  }
   
 }
